@@ -137,55 +137,30 @@ func (convert *Converter) AddFont() {
 }
 
 // Page
-// [P, mm|pt|in, A4, P|L]
-// mm|pt|in, Indicates the unit of size, respectively representing millimeters, pixels, and feet
-// P|L, Page layout, namely Portait, Landscape
+// [P, mm|pt|in, sizeName|width, P|L|height]
+// 新格式: P|{unit}|{sizeName}|{orientation}  如 P|pt|A4|P
+// 旧格式兼容: P|{unit}|{width}|{height}  如 P|pt|612.0000|792.0000
 func (convert *Converter) Page(line string, elements []string) {
 	convert.pdf = new(gopdf.GoPdf)
 
 	checkLength(line, elements, 4)
-	switch elements[2] {
-	/* A0 ~ A5 Paper pixel representation:
-	'A0': [2383.94, 3370.39],
-	'A1': [1683.78, 2383.94],
-	'A2': [1190.55, 1683.78],
-	'A3': [841.89, 1190.55],
-	'A4': [595.28, 841.89],
-	'A5': [419.53, 595.28],
-	*/
-	case "A3":
-		config := defaultConfigs["A3"]
-		convert.setunit(elements[1])
-		if elements[3] == "P" {
-			convert.start(config.width, config.height)
-		} else if elements[3] == "L" {
-			convert.start(config.height, config.width)
-		} else {
-			panic("Page Orientation accept P or L")
+	convert.setunit(elements[1])
+
+	sizeName := elements[2]
+	config, ok := defaultConfigs[sizeName]
+	if ok {
+		w, h := resolvePageSize(config, elements[3])
+		convert.start(w, h)
+	} else {
+		// 旧格式兼容：P|{unit}|{width}|{height}（LTR 数值格式）
+		w, errW := strconv.ParseFloat(elements[2], 64)
+		h, errH := strconv.ParseFloat(elements[3], 64)
+		if errW != nil || errH != nil {
+			panic("page size not found in config and cannot parse as numeric: " + sizeName)
 		}
-	case "A4":
-		config := defaultConfigs["A4"]
-		convert.setunit(elements[1])
-		if elements[3] == "P" {
-			convert.start(config.width, config.height)
-		} else if elements[3] == "L" {
-			convert.start(config.height, config.width)
-		} else {
-			panic("Page Orientation accept P or L")
-		}
-	case "LTR":
-		config := defaultConfigs["LTR"]
-		convert.setunit(elements[1])
-		if elements[3] == "P" {
-			convert.start(config.width, config.height)
-		} else if elements[3] == "L" {
-			convert.start(config.height, config.width)
-		} else {
-			panic("Page Orientation accept P or L")
-		}
-	default:
-		panic("This size not supported yet:" + elements[2])
+		convert.start(w, h)
 	}
+
 	convert.AddFont()
 	convert.pdf.AddPage()
 }

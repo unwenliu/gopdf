@@ -102,6 +102,18 @@ func init() {
 	}
 }
 
+// resolvePageSize 根据 orientation 返回页面的宽高
+func resolvePageSize(config *Config, orientation string) (width, height float64) {
+	switch orientation {
+	case "P":
+		return config.width, config.height
+	case "L":
+		return config.height, config.width
+	default:
+		panic("orientation must be P or L")
+	}
+}
+
 // Register create self pdf config
 func Register(size string, config *Config) {
 	if _, ok := defaultConfigs[size]; ok {

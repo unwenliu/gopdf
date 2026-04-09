@@ -314,40 +314,17 @@ func (report *Report) SetMargin(dx, dy float64) {
 	report.SetXY(x+dx, y+dy)
 }
 
-// 设置页面的尺寸, unit: mm pt in  size: A4 LTR, 目前支持常用的两种方式
+// SetPage 设置页面的尺寸, unit: mm pt in  size: 支持所有已注册的页面尺寸(如 A3 A4 LTR 等), orientation: P(纵向) L(横向)
 func (report *Report) SetPage(size string, orientation string) {
 	unit := "pt"
 	config, ok := defaultConfigs[size]
 	if !ok {
-		panic("the config not exists, please add config")
+		panic("the config not exists, please add config: " + size)
 	}
 
-	switch size {
-	case "A4":
-		switch orientation {
-		case "P":
-			report.addAtomicCell("P|" + unit + "|A4|P")
-			report.pageWidth = config.width
-			report.pageHeight = config.height
-		case "L":
-			report.addAtomicCell("P|" + unit + "|A4|L")
-			report.pageWidth = config.height
-			report.pageHeight = config.width
-		}
-	case "LTR":
-		switch orientation {
-		case "P":
-			report.pageWidth = config.width
-			report.pageHeight = config.height
-			report.addAtomicCell("P|" + unit + "|" + strconv.FormatFloat(report.pageWidth, 'f', 4, 64) +
-				"|" + strconv.FormatFloat(report.pageHeight, 'f', 4, 64))
-		case "L":
-			report.pageWidth = config.height
-			report.pageHeight = config.width
-			report.addAtomicCell("P  |" + unit + "|" + strconv.FormatFloat(report.pageWidth, 'f', 4, 64) +
-				"|" + strconv.FormatFloat(report.pageHeight, 'f', 4, 64))
-		}
-	}
+	report.pageWidth, report.pageHeight = resolvePageSize(config, orientation)
+
+	report.addAtomicCell("P|" + unit + "|" + size + "|" + orientation)
 
 	report.contentWidth = config.contentWidth
 	report.contentHeight = config.contentHeight
