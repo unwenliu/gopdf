@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/tiechui1994/gopdf/core"
+	"github.com/unwenliu/gopdf/core"
 )
 
 func LoadReport() {

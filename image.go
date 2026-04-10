@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tiechui1994/gopdf/core"
+	"github.com/unwenliu/gopdf/core"
 )
 
 type Image struct {

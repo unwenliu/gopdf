@@ -1,8 +1,8 @@
 package example
 
 import (
-	"github.com/tiechui1994/gopdf/core"
-	"github.com/tiechui1994/gopdf"
+	"github.com/unwenliu/gopdf/core"
+	"github.com/unwenliu/gopdf"
 	"time"
 	"math/rand"
 	"fmt"

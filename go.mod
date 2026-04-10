@@ -1,4 +1,4 @@
-module github.com/tiechui1994/gopdf
+module github.com/unwenliu/gopdf
 
 go 1.13
 

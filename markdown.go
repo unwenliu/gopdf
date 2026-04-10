@@ -12,9 +12,9 @@ import (
 	"time"
 	"io"
 
-	"github.com/tiechui1994/gopdf/core"
-	"github.com/tiechui1994/gopdf/util"
-	"github.com/tiechui1994/gopdf/lex"
+	"github.com/unwenliu/gopdf/core"
+	"github.com/unwenliu/gopdf/util"
+	"github.com/unwenliu/gopdf/lex"
 )
 
 const (

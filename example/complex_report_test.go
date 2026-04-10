@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tiechui1994/gopdf"
-	"github.com/tiechui1994/gopdf/core"
+	"github.com/unwenliu/gopdf"
+	"github.com/unwenliu/gopdf/core"
 )
 
 const (
@@ -138,7 +138,7 @@ func ComplexReportFooterExecutor(report *core.Report) {
 	footer.HorizontalCentered().SetContent(content).GenerateAtomicCell()
 }
 func ComplexReportHeaderExecutor(report *core.Report) {
-	content := "github.com/tiechui1994/gopdf"
+	content := "github.com/unwenliu/gopdf"
 	footer := gopdf.NewSpan(10, 0, report)
 	footer.SetFont(textFont)
 	footer.SetFontColor("255,0,0")
